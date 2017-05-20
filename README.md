@@ -13,7 +13,7 @@ ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/
 then to install cmake:
 brew install cmake
 
-in order to run it you will need several metis downloaded and installed. Download it from there:
+in order to run it you will need metis downloaded and installed. Download it from there:
 http://glaros.dtc.umn.edu/gkhome/metis/metis/download
 
 then in the terminal select the folder and enter:
