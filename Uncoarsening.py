@@ -1,9 +1,9 @@
 import networkx as nx
-import random as rd
+import random as rnd
 import numpy as np
-from Utils import edge_cut
+from Utils import calculate_edge_cut
 
-CONVERGENCE_PERCENTAGE = 1.05
+CONVERGENCE_PERCENTAGE = 1.0
 
 
 def project_back(contracted_edges:list, partitioning: dict) -> dict :
@@ -25,9 +25,9 @@ def weight_partitions(graph : nx.Graph, partitioning : dict, k=8):
 
 
 def refine(graph : nx.Graph, partitioning : dict, partitions_weights : list, W_min, W_max, k=8, C=1.03) -> [dict , list ]:
-
-
-    for node in rd.shuffle(graph.nodes()):
+    nodes = graph.nodes()
+    rnd.shuffle(nodes)
+    for node in nodes:
 
         node_partition = partitioning[node]
         partition_weight = partitions_weights[node_partition]
@@ -43,7 +43,7 @@ def refine(graph : nx.Graph, partitioning : dict, partitions_weights : list, W_m
         ED = {}
         for adj in graph.neighbors(node):
             adj_partition = partitioning[adj]
-            adj_part_weight = partition_weight[adj_partition]
+            adj_part_weight = partitions_weights[adj_partition]
             if adj_partition == node_partition:
                 # if the adj node is from the same partition update the internal degree
                 ID += graph[node][adj]['weight']
@@ -119,7 +119,7 @@ def uncoarse(graphs_history:list, coarsening_history:list, initial_partitioning:
     for step in reversed(range(0,steps-1)) :
         partitioning = project_back(coarsening_history[step],partitioning)
 
-        prec_edge_cut = edge_cut(graphs_history[step], partitioning)
+        prec_edge_cut = calculate_edge_cut(graphs_history[step], partitioning)
         while True:
             partitioning,partitions_weights = refine(
                                             graph=graphs_history[step],
@@ -127,8 +127,8 @@ def uncoarse(graphs_history:list, coarsening_history:list, initial_partitioning:
                                             partitions_weights = partitions_weights,
                                             W_min = W_min,
                                             W_max = W_max)
-            actual_edge_cut = edge_cut(graphs_history[step],partitioning)
-            if prec_edge_cut <= actual_edge_cut * CONVERGENCE_PERCENTAGE:
+            actual_edge_cut = calculate_edge_cut(graphs_history[step], partitioning)
+            if prec_edge_cut == actual_edge_cut:
                 # Refine until convergence, until we are not able to have a solution better than the
                 # precedent from a factor Convergence percentage
                 break

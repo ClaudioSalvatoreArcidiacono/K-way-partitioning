@@ -2,9 +2,68 @@ import networkx as nx
 from Matching import HEM
 import time
 import metis
+from itertools import chain
 
 NPARTS = 8
+def contracted_nodes(G, u, v, self_loops=True):
+    """Returns the graph that results from contracting ``u`` and ``v``.
 
+    Node contraction identifies the two nodes as a single node incident to any
+    edge that was incident to the original two nodes.
+
+    Parameters
+    ----------
+    G : NetworkX graph
+       The graph whose nodes will be contracted.
+
+    u, v : nodes
+       Must be nodes in ``G``.
+
+    self_loops : Boolean
+       If this is ``True``, any edges joining ``u`` and ``v`` in ``G`` become
+       self-loops on the new node in the returned graph.
+
+    Returns
+    -------
+    Networkx graph
+       the graph object of the same type as ``G`` (leaving ``G`` unmodified)
+       with ``u`` and ``v`` identified in a single node. The right node ``v``
+       will be merged into the node ``u``, so only ``u`` will appear in the
+       returned graph.
+
+    Examples
+    --------
+    Contracting two nonadjacent nodes of the cycle graph on four nodes `C_4`
+    yields the path graph (ignoring parallel edges)::
+
+
+    See also
+    --------
+    contracted_edge
+    quotient_graph
+
+    Notes
+    -----
+    This function is also available as ``identified_nodes``.
+    """
+    H = G
+    if H.is_directed():
+        in_edges = ((w, u, d) for w, x, d in G.in_edges(v, data=True)
+                    if self_loops or w != u)
+        out_edges = ((u, w, d) for x, w, d in G.out_edges(v, data=True)
+                     if self_loops or w != u)
+        new_edges = chain(in_edges, out_edges)
+    else:
+        new_edges = ((u, w, d) for x, w, d in G.edges(v, data=True)
+                     if self_loops or w != u)
+    v_data = H.node[v]
+    H.remove_node(v)
+    H.add_edges_from(new_edges)
+    if 'contraction' in H.node[u]:
+        H.node[u]['contraction'][v] = v_data
+    else:
+        H.node[u]['contraction'] = {v: v_data}
+    return H
 
 def contract_edge(graph: nx.Graph, edge: tuple) -> nx.Graph :
     """Returns the graph that results from contracting the specified edge.
@@ -32,18 +91,24 @@ def contract_edge(graph: nx.Graph, edge: tuple) -> nx.Graph :
     """
     vtx1 = edge[0]
     vtx2= edge [1]
-    coarsened_graph = nx.contracted_edge(graph, edge, self_loops=False)
+
+
     w = graph.node[vtx1]['weight'] + graph.node[vtx2]['weight']
-    coarsened_graph.add_node(vtx1,{'weight':w})
     adj_vtx1 = graph.neighbors(vtx1)
     adj_vtx2 = graph.neighbors(vtx2)
     common_vtxs = set(adj_vtx1).intersection(adj_vtx2)
 
+    common_vtxs_weight = {}
     for vtx in common_vtxs :
         w1 = graph[vtx1][vtx]['weight']
         w2 = graph[vtx2][vtx]['weight']
-        coarsened_graph[vtx1][vtx]['weight'] =  w1 + w2
+        common_vtxs_weight[vtx] = w1 + w2
 
+    coarsened_graph = contracted_nodes(graph, vtx1, vtx2, self_loops=False)
+    coarsened_graph.node[vtx1]['weight'] = w
+
+    for vtx in common_vtxs :
+        coarsened_graph[vtx1][vtx]['weight'] =  common_vtxs_weight[vtx]
     return coarsened_graph
 
 
@@ -93,10 +158,10 @@ def coarse (graph: nx.Graph, k=8, min_shrink=0.8, initial_partition_size=15) :
         print('current number of nodes: ',num_nodes , 'edges:',prec_step_graph.number_of_edges())
         matching = HEM(prec_step_graph)
 
-        coarsened_graph = prec_step_graph
+        coarsened_graph = prec_step_graph.copy()
 
         for edge in matching :
-            coarsened_graph = contract_edge(coarsened_graph,edge)
+            contract_edge(coarsened_graph, edge)
 
         graphs_history.append(coarsened_graph)
         coarsening_history.append(matching)
@@ -115,26 +180,6 @@ def coarse (graph: nx.Graph, k=8, min_shrink=0.8, initial_partition_size=15) :
     return graphs_history , coarsening_history
 
 
-
-
-g1 = nx.random_regular_graph(2, 500)
-g = nx.Graph()
-print('reading graph')
-for i in g1.nodes():
-    g.add_node(i, {'weight': 1})
-for edge in g1.edges():
-    g.add_edge(edge[0], edge[1], {'weight': 1})
-start = time.time()
-graphs_history , coarsening_history = coarse(g,k=NPARTS)
-end = time.time()
-m, s = divmod((end - start), 60)
-enlapsed_time = "%d minutes and %02d seconds" % (m, s)
-print('finished coarsening after ', graphs_history.__len__(), ' steps in ', enlapsed_time)
-
-
-
-
-edge_cut , initial_partitioning = metis.part_graph(graphs_history[-1], NPARTS, recursive=True)
 
 
 
