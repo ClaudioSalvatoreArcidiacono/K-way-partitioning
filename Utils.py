@@ -9,3 +9,11 @@ def calculate_edge_cut(graph:nx.Graph, partitioning:dict) :
             edge_cut += graph[edge[0]][edge[1]]['weight']
 
     return edge_cut
+
+def parse_input_file (path) :
+    input = open(path,'r')
+    output= open('parsed_' + path,mode='w')
+    i = 0
+    for line in input.readlines()[1:]:
+        output.write(str(i)+line)
+        i += 1

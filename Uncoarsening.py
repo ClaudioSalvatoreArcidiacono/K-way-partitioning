@@ -117,6 +117,7 @@ def uncoarse(graphs_history:list, coarsening_history:list, initial_partitioning:
 
     partitions_weights = weight_partitions(graphs_history[-1],partitioning,k)
     for step in reversed(range(0,steps-1)) :
+        print('uncoarsening at step',(steps -1 -step),'/',(steps-1))
         partitioning = project_back(coarsening_history[step],partitioning)
 
         prec_edge_cut = calculate_edge_cut(graphs_history[step], partitioning)
@@ -128,7 +129,7 @@ def uncoarse(graphs_history:list, coarsening_history:list, initial_partitioning:
                                             W_min = W_min,
                                             W_max = W_max)
             actual_edge_cut = calculate_edge_cut(graphs_history[step], partitioning)
-            if prec_edge_cut == actual_edge_cut:
+            if prec_edge_cut <= actual_edge_cut * 1.02:
                 # Refine until convergence, until we are not able to have a solution better than the
                 # precedent from a factor Convergence percentage
                 break
