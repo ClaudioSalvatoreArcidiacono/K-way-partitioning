@@ -6,7 +6,7 @@ def calculate_edge_cut(graph:nx.Graph, partitioning:dict) :
     for edge in graph.edges():
 
         if partitioning[edge[1]] != partitioning[edge[0]]:
-            edge_cut += graph[edge[0]][edge[1]]['weight']
+            edge_cut += 1
 
     return edge_cut
 
