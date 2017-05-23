@@ -24,7 +24,7 @@ def weight_partitions(graph : nx.Graph, partitioning : dict, k=8):
     return partitions_weights
 
 
-def refine(graph : nx.Graph, partitioning : dict, partitions_weights : list, W_min, W_max, k=8, C=1.03) -> [dict , list ]:
+def refine(graph : nx.Graph, partitioning : dict, partitions_weights : list, W_min, W_max) -> [dict , list ]:
     nodes = graph.nodes()
     rnd.shuffle(nodes)
     for node in nodes:
