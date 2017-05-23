@@ -70,6 +70,7 @@ def refine(graph : nx.Graph, partitioning : dict, partitions_weights : list, W_m
         if ID < max_ED :
             max_balance = 0
             best_partition = max_partitions[0]
+            #find the swapping that provides the best balancing among those with highest External Degree
             for partition in max_partitions:
                 if partitions_weights[node_partition] - partitions_weights[partition] > max_balance:
                     max_balance = partitions_weights[node_partition] - partitions_weights[partition]
@@ -116,7 +117,7 @@ def uncoarse(graphs_history:list, coarsening_history:list, initial_partitioning:
         partitioning[node]=initial_partitioning[i]
 
     partitions_weights = weight_partitions(graphs_history[-1],partitioning,k)
-    for step in reversed(range(0,steps-1)) :
+    for step in reversed(range(0,steps-1)) :    #from (step-1)-1 to 0
         print('uncoarsening at step',(steps -1 -step),'/',(steps-1))
         partitioning = project_back(coarsening_history[step],partitioning)
 
