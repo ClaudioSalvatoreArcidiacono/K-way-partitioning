@@ -83,7 +83,7 @@ def refine(graph : nx.Graph, partitioning : dict, partitions_weights : list, W_m
 
         elif  ID == max_ED:
             more_balanced = False
-            max_balance = 0
+            max_balance = node_weight
             best_partition = max_partitions[0]
             for partition in max_partitions:
                 if partitions_weights[node_partition] - partitions_weights[partition] > max_balance:
