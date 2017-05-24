@@ -1,7 +1,7 @@
 import networkx as nx
 import random as rnd
 import numpy as np
-from Utils import calculate_edge_cut
+from utils import calculate_edge_cut
 
 CONVERGENCE_PERCENTAGE = 1.0
 
@@ -134,5 +134,5 @@ def uncoarse(graphs_history:list, coarsening_history:list, initial_partitioning:
                                             partitions_weights = partitions_weights,
                                             W_min = W_min,
                                             W_max = W_max)
-            
+
     return partitioning

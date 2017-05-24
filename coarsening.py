@@ -1,5 +1,5 @@
 import networkx as nx
-from Matching import HEM
+from matching import HEM
 import time
 import metis
 from itertools import chain

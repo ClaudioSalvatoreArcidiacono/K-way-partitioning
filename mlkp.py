@@ -2,11 +2,11 @@ import networkx as nx
 import argparse
 import time
 import metis
-from Coarsening import coarse
-from Uncoarsening import uncoarse
-from Utils import calculate_edge_cut
-from Utils import read_graph
-from Utils import random_graph
+from coarsening import coarse
+from uncoarsening import uncoarse
+from utils import calculate_edge_cut
+from utils import read_graph
+from utils import random_graph
 
 def k_way_partitioning(k:int,g:nx.Graph):
 
