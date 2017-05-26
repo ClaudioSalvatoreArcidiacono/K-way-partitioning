@@ -7,25 +7,42 @@ from uncoarsening import uncoarse
 from utils import calculate_edge_cut
 from utils import read_graph
 from utils import random_graph
+import spectral_bisection
 
 def k_way_partitioning(k:int,g:nx.Graph):
 
     # COARSENING
     start = time.time()
     print('starting coarsening phase')
+
     graphs_history , coarsening_history = coarse(g,k=k)
+
     end_coarsening = time.time()
     m, s = divmod((end_coarsening - start), 60)
     enlapsed_time = "%d minutes and %f seconds" % (m, s)
     print('finished coarsening after ', graphs_history.__len__(), ' steps in ', enlapsed_time)
 
+
+
     # INITIAL PARTITIONING
-    edge_cut , initial_partitioning = metis.part_graph(graphs_history[-1], k, recursive=True)
+    print('starting initial partitioning phase')
+    start_init_part = time.time()
+
+    initial_partitioning = spectral_bisection.initial_partitioning(graphs_history[-1], k)
+
+    end_init_part = time.time()
+    m, s = divmod((end_init_part - start_init_part), 60)
+    enlapsed_time = "%d minutes and %f seconds" % (m, s)
+    print('finished initial partitioning in ', enlapsed_time)
+
+
 
     # UNCOARSENING
     start_uncoarsening = time.time()
     print('starting uncoarsening phase')
+
     final_partitioning = uncoarse(graphs_history,coarsening_history,initial_partitioning,k)
+
     end = time.time()
     m, s = divmod((end - start_uncoarsening), 60)
     enlapsed_time = "%d minutes and %f seconds" % (m, s)

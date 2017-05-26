@@ -3,9 +3,6 @@ import random as rnd
 import numpy as np
 from utils import calculate_edge_cut
 
-CONVERGENCE_PERCENTAGE = 1.0
-
-
 def project_back(contracted_edges:list, partitioning: dict) -> dict :
 
     for edge in contracted_edges:
