@@ -1,7 +1,6 @@
 import networkx as nx
 import numpy as np
-from numpy import linalg as LA
-
+from scipy.sparse.linalg import eigsh
 
 def get_adj_matrix(graph : nx.Graph) -> np.array :
     shape = (graph.number_of_nodes(),graph.number_of_nodes())
@@ -40,7 +39,7 @@ def bisect(laplacian : np.array,my_nodes,partitioning,current_partition,k):
         return
     ix=np.ix_(my_nodes,my_nodes)
     my_lap = laplacian[ix]
-    eigenvalues , eigenvectors =LA.eig(my_lap)
+    eigenvalues, eigenvectors = eigsh(my_lap,k=2,which='SA')
     second_smallest_eigenvalue_index = np.argsort(eigenvalues)[1]
     bisection = eigenvectors[:,second_smallest_eigenvalue_index]
     mask = bisection >=0

@@ -1,10 +1,8 @@
 import networkx as nx
 from matching import HEM
-import time
-import metis
 from itertools import chain
 
-NPARTS = 8
+
 def contracted_nodes(G, u, v, self_loops=True):
     """Returns the graph that results from contracting ``u`` and ``v``.
 
