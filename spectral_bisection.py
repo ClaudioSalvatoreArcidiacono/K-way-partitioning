@@ -1,7 +1,7 @@
 import networkx as nx
 import numpy as np
 from scipy.sparse.linalg import eigsh
-
+import random as rnd
 def get_adj_matrix(graph : nx.Graph) -> np.array :
     shape = (graph.number_of_nodes(),graph.number_of_nodes())
     adj_matrix = np.zeros(shape=shape,dtype=np.float)
@@ -39,9 +39,12 @@ def bisect(laplacian : np.array,my_nodes,partitioning,current_partition,k):
         return
     ix=np.ix_(my_nodes,my_nodes)
     my_lap = laplacian[ix]
-    eigenvalues, eigenvectors = eigsh(my_lap,k=2,which='SA')
-    second_smallest_eigenvalue_index = np.argsort(eigenvalues)[1]
-    bisection = eigenvectors[:,second_smallest_eigenvalue_index]
+    if my_lap.shape[0]>=2:
+        eigenvalues, eigenvectors = eigsh(my_lap,k=2,which='SA')
+        second_smallest_eigenvalue_index = np.argsort(eigenvalues)[1]
+        bisection = eigenvectors[:,second_smallest_eigenvalue_index]
+    else:
+        bisection = my_lap[0]
     mask = bisection >=0
 
     partitioning[my_nodes[mask]]+=current_partition
@@ -60,6 +63,10 @@ def initial_partitioning(graph: nx.Graph,k=8) :
     my_nodes = np.arange(laplacian.shape[0])
 
     bisect(laplacian,my_nodes,partitioning,current_partition,k)
+
+    for i in range(partitioning.__len__()):
+        if (partitioning[i]>=k):
+            partitioning[i]=rnd.randrange(k)
 
     return partitioning
 
