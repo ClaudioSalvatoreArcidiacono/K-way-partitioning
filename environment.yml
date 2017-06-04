@@ -34,6 +34,5 @@ dependencies:
 - zlib=1.2.8=3
 - pip:
   - metis==0.2a1
-  - recpy==0.2.0
 prefix: /Users/claudioarcidiacono/anaconda/envs/Advanced-Algorithms-env
 

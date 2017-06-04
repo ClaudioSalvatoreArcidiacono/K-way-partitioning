@@ -2,29 +2,44 @@
 Installation
 ____________
 
-First of all you need to have cmake installed,
+The following software packages are necessary for running the program :
 
-How to install cmake :
-this is to install Homebrew, that will be used to install cmake
+Networkx (Library for the creation and manipulation of graphs)
+    pip install networkx
+    or
+    Installing with Anaconda
+    conda install -c anaconda networkx=1.11
 
-type in terminal:
-ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+Scipy (Library that contains modules for linear algebra)
+    pip install scipy
 
-then to install cmake:
-brew install cmake
+Metis (Wrapper for the METIS library for partitioning graphs)
+    pip install metis
 
-in order to run it you will need metis downloaded and installed. Download it from there:
-http://glaros.dtc.umn.edu/gkhome/metis/metis/download
 
-then in the terminal select the folder and enter:
-make config shared=1
-make install
-export METIS_DLL=/usr/local/lib/libmetis.dylib
-
-for the next step you will need anaconda or similar, you can get it from there :
+In order to simplify package management and deployment you can install Anaconda :
 
 https://www.continuum.io/anaconda-overview
 
+With Anaconda you can create the envirorment that we used to develop the application by simply executing the following
+command :
 
-then go in the project folder and in terminal type :
 conda env create -f environment.yml
+
+To activate the envirorment :
+source activate Advanced-Algorithms-env
+
+
+Execution
+____________
+To execute the program :
+
+python ./mlkp.py [-h] [-f FILE | -r DEGREE N_NODES] k
+
+k is the number of partitions
+-f and -r are exclusive, either you indicate the FILE path where to read the graph or you indicate the
+DEGREE and the N_NODES (number of nodes) in order to generate a random graph with the previous criteria.
+
+Output
+____________
+The program creates a file containing the partitioning dictionary (node name , partition)
