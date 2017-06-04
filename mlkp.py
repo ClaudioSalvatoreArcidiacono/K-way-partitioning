@@ -7,6 +7,7 @@ from uncoarsening import uncoarse
 from utils import calculate_edge_cut
 from utils import read_graph
 from utils import random_graph
+from utils import output_file
 import spectral_bisection
 
 def k_way_partitioning(k:int,g:nx.Graph):
@@ -42,6 +43,8 @@ def k_way_partitioning(k:int,g:nx.Graph):
     print('starting uncoarsening phase')
 
     final_partitioning = uncoarse(graphs_history,coarsening_history,initial_partitioning,k)
+
+    output_file(final_partitioning)
 
     end = time.time()
     m, s = divmod((end - start_uncoarsening), 60)

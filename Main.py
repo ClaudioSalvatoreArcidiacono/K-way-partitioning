@@ -4,9 +4,10 @@ import metis
 from coarsening import coarse
 from uncoarsening import uncoarse
 from utils import calculate_edge_cut
+from utils import output_file
 import spectral_bisection
 
-NPARTS = 64
+NPARTS = 10
 
 def read_graph (path) :
     g1 = nx.read_adjlist(path)
@@ -62,6 +63,9 @@ end = time.time()
 m, s = divmod((end - start_uncoarsening), 60)
 enlapsed_time = "%d minutes and %f seconds" % (m, s)
 print('finished un-coarsening in', enlapsed_time)
+
+
+output_file(final_partitioning)
 
 edge_cut = calculate_edge_cut(graphs_history[0],final_partitioning)
 print('the final edge cut is',edge_cut)

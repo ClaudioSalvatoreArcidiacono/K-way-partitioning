@@ -39,3 +39,12 @@ def random_graph(degree, nodes):
         if (edge[0] != edge[1]):
             g.add_edge(edge[0], edge[1], {'weight': 1})
     return g
+
+
+def output_file (partitioning : dict) :
+    output= open('output_mlkp.txt',mode='w')
+    output.write('node name , partition'+'\n')
+    for item in sorted(partitioning.items()):
+        output.write(str(item[0]) + ' , ' + str(item[1])+ '\n')
+
+
