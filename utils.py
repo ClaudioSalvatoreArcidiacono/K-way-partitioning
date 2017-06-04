@@ -43,8 +43,7 @@ def random_graph(degree, nodes):
 
 def output_file (partitioning : dict) :
     output= open('output_mlkp.txt',mode='w')
-    output.write('node name , partition'+'\n')
+    output.write('node name,partition'+'\n')
     for item in sorted(partitioning.items()):
-        print(type(item[0]))
-        output.write(str(item[0]) + ' , ' + str(item[1])+ '\n')
+        output.write(str(item[0]) + ',' + str(item[1])+ '\n')
 

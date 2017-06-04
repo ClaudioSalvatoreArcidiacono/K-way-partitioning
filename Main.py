@@ -11,10 +11,9 @@ import spectral_bisection
 
 NPARTS = 10
 
+#g = read_graph('4elt.txt')
 
-g = read_graph('4elt.txt')
-
-#g=random_graph(200,1000)
+g=random_graph(200,1000)
 # COARSENING
 start = time.time()
 print('starting coarsening phase')
