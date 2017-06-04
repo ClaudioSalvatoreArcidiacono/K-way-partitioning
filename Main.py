@@ -5,35 +5,16 @@ from coarsening import coarse
 from uncoarsening import uncoarse
 from utils import calculate_edge_cut
 from utils import output_file
+from utils import read_graph
+from utils import random_graph
 import spectral_bisection
 
 NPARTS = 10
 
-def read_graph (path) :
-    g1 = nx.read_adjlist(path)
-    g = nx.Graph()
-    print('reading graph')
-    for i in g1.nodes():
-        g.add_node(i, {'weight': 1})
-    for edge in g1.edges():
-        if(edge[0]!=edge[1]):
-            g.add_edge(edge[0], edge[1], {'weight': 1})
-    return g
 
-def random_graph(degree, nodes):
-    print('generating a random graph')
-    g1 = nx.random_regular_graph(degree,nodes)
-    g = nx.Graph()
-    for i in g1.nodes():
-        g.add_node(i, {'weight': 1})
-    for edge in g1.edges():
-        if (edge[0] != edge[1]):
-            g.add_edge(edge[0], edge[1], {'weight': 1})
-    return g
+g = read_graph('4elt.txt')
 
-#g = read_graph('4elt.txt')
-
-g=random_graph(200,1000)
+#g=random_graph(200,1000)
 # COARSENING
 start = time.time()
 print('starting coarsening phase')

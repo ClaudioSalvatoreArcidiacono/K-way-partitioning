@@ -23,10 +23,10 @@ def read_graph (path) :
     g = nx.Graph()
     print('reading graph in ' + path)
     for i in g1.nodes():
-        g.add_node(i, {'weight': 1})
+        g.add_node(int(i), {'weight': 1})
     for edge in g1.edges():
         if(edge[0]!=edge[1]):
-            g.add_edge(edge[0], edge[1], {'weight': 1})
+            g.add_edge(int(edge[0]), int(edge[1]), {'weight': 1})
     return g
 
 def random_graph(degree, nodes):
@@ -45,6 +45,6 @@ def output_file (partitioning : dict) :
     output= open('output_mlkp.txt',mode='w')
     output.write('node name , partition'+'\n')
     for item in sorted(partitioning.items()):
+        print(type(item[0]))
         output.write(str(item[0]) + ' , ' + str(item[1])+ '\n')
-
 
