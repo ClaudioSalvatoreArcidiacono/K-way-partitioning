@@ -29,7 +29,8 @@ def k_way_partitioning(k:int,g:nx.Graph):
     print('starting initial partitioning phase')
     start_init_part = time.time()
 
-    initial_partitioning = spectral_bisection.initial_partitioning(graphs_history[-1], k)
+    #initial_partitioning = spectral_bisection.initial_partitioning(graphs_history[-1], k)
+    edge_cut, initial_partitioning = metis.part_graph(graphs_history[-1], k, recursive=True)
 
     end_init_part = time.time()
     m, s = divmod((end_init_part - start_init_part), 60)
@@ -44,8 +45,6 @@ def k_way_partitioning(k:int,g:nx.Graph):
 
     final_partitioning = uncoarse(graphs_history,coarsening_history,initial_partitioning,k)
 
-    output_file(final_partitioning)
-
     end = time.time()
     m, s = divmod((end - start_uncoarsening), 60)
     enlapsed_time = "%d minutes and %f seconds" % (m, s)
@@ -57,6 +56,9 @@ def k_way_partitioning(k:int,g:nx.Graph):
     m, s = divmod((end - start), 60)
     enlapsed_time = "%d minutes and %f seconds" % (m, s)
     print('the overall time is',enlapsed_time)
+
+    # Write on file the result
+    output_file(final_partitioning)
 
     # THE RESULT OBTAINED WITH METIS
     start_meth = time.time()
